@@ -45,8 +45,7 @@ SSO_REALM_SID= # Go to console > Frontline > Manage > SSO/Log in
 TWILIO_SMS_NUMBER= # SMS enabled phone number in e164 format (e.g. +14135551234)
 TWILIO_WHATSAPP_NUMBER= # A Twilio WhatsApp sender, if you have one.
 
-AIRTABLE_API_KEY= # Your Airtable API key
-AIRTABLE_BASE_ID= # Your Airtable Base ID
+HUBSPOT_API_KEY= # Your Hubspot API key
 ```
 
 ## Deploy
