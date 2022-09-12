@@ -1,16 +1,15 @@
 
 // Private endpoint for shared functions (e.g. getting CRM data)
-const axios = require('axios');
 const {phone} = require('phone');
 
 /**
  * Normalises phone numbers from CRM from national format to e.164. 
  * @param {String} raw - Phone number from the CRM
  * @param {Boolean} wa  - Whether the number is a whatsapp number. Whatsapp Numbers will skip mobile prefix checkes 
- * @param {String} country - Country for national format. Defaults to SG (Singapore)
+ * @param {String} country - Country for national format. Defaults to US (United States)
  * @returns {String} Normalised phone number.
  */
-const normalize = (raw, wa= false,country='SG')=>{
+const normalize = (raw, wa= false, country='US')=>{
   
   return phone(raw,{
     country,

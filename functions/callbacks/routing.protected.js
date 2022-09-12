@@ -1,11 +1,10 @@
 
 // Protected endpoint for Twilio Conversations webhooks. Used to populate the user's information from the CRM when a new unidentified message comes in.
 
-const hubspot = require('@hubspot/api-client')
 const axios = require('axios');
 
-const customersPath = Runtime.getAssets()['/providers/customers.js'].path
-const {parseCustomer} = require(customersPath);
+const {getHubspotClient} = require(Runtime.getAssets()['/providers/hubspot.js'].path);
+const {parseCustomer} = require(Runtime.getAssets()['/providers/customers.js'].path);
 
 /**
  * Class Method to handle callbacks.
@@ -13,33 +12,21 @@ const {parseCustomer} = require(customersPath);
 class callback_actions{
   constructor(context, event, callback){
     Object.assign(this,{context, event, callback});
-    const {HUBSPOT_API_KEY} = context;
-    this.hubspotClient = new hubspot.Client({ HUBSPOT_API_KEY });
-    
-    //For Legacy hubspot API
-    this.hs_old_client = axios.create({
-      params: {
-        hapikey: HUBSPOT_API_KEY
-      },
-      headers: {
-        'Content-Type': 'application/json' 
-      },
-      baseURL: 'https://api.hubapi.com/',
-    });
-    
-
-    
-
+    this.hubspotClient = getHubspotClient(context.HUBSPOT_API_KEY);
   }
+
   async onConversationAdded(){
     return;
   }
+
   async onConversationStateUpdated(){
     return;
   }
+
   async onMessageAdded(){
     return;
   }
+  
   async onParticipantAdded(){
     let participant = this.event.ParticipantSid;
     let conversationSid =  this.event.ConversationSid;

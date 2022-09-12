@@ -2,9 +2,6 @@
 // Public endpoint for Twilio Frontline's Outgoing Conversations Callback Url
 exports.handler = async function(context, event, callback) {
     
-    const {SSO_REALM_SID,ACCOUNT_SID,AUTH_TOKEN} = context;
-
-    
     const location = event.location;
     const rsp = new Twilio.Response();
     rsp.setHeaders({
