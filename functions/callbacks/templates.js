@@ -2,7 +2,11 @@
 // Public endpoint for Twilio Frontline's Templates Callback Url
 
 const hubspot = require('@hubspot/api-client')
-const {tokenCheck,getTemplatesByCustomerId} = require(Runtime.getFunctions().fn.path);
+const customersPath = Runtime.getAssets()['/providers/customers.js'].path
+const {fetchCustomerById} = require(customersPath);
+
+const templatesPath = Runtime.getAssets()['/providers/templates.js'].path
+const {getTemplatesByCustomer} = require(templatesPath);
 
 exports.handler = async function(context, event, callback) {
     
@@ -26,7 +30,11 @@ exports.handler = async function(context, event, callback) {
 
     switch (location) {
         case 'GetTemplatesByCustomerId': 
-            let output =await getTemplatesByCustomerId(hubspotClient,event, context);
+            let customer = {properties:{firstname:' '}};
+            if (event.CustomerId) {
+                customer = await fetchCustomerById(hubspotClient, event.CustomerId);
+            }
+            let output = await getTemplatesByCustomer(context.Worker, customer);
             rsp.setBody(output);
         break;
         default: 

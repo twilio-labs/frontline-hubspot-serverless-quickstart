@@ -1,7 +1,43 @@
-
-// Private file for configuring and retrieving templates
-
-exports.quickReplies =[
+/**
+ * Fetches response templates based on the customer and worker contexts
+ * @param {String} worker - Email/Identity of the worker.
+ * @param {String} customerDetails - Customer object
+ * @returns {Array} Array of Twilio Frontline Templates.
+ */
+ const getTemplatesByCustomer = async (worker, customerDetails)=>{
+    
+    let customerName = customerDetails.properties.firstname;
+      
+      let template = JSON.parse(JSON.stringify(quickRepliesTemplates));
+      
+      for(let cat of template){
+        for(let tmp of cat.templates){
+          tmp.content = compileTemplate(tmp.raw, customerName, worker, worker);
+          delete tmp.raw;
+        }
+      }
+  
+    
+    return template;   
+  }
+  
+  /**
+   * Function to replace template placeholders with worker name, email, and customer name.
+   * @param {String} template - Raw template with placeholders
+   * @param {String} customerName - Customer Name 
+   * @param {String} worker - Worker Name
+   * @param {String} email  - Worker Email
+   * @returns {String} Compiled template.
+   */
+  const compileTemplate = (template, customerName, worker, email) => {
+      let compiledTemplate = template.replace(/{{Name}}/, customerName);
+      compiledTemplate = compiledTemplate.replace(/{{Author}}/, worker);
+      compiledTemplate = compiledTemplate.replace(/{{Email}}/, email);
+  
+      return compiledTemplate;
+  };
+  
+  const quickRepliesTemplates =[
     {
       display_name: 'Openers',
       templates:[
@@ -56,3 +92,8 @@ exports.quickReplies =[
       ]
     }
   ]
+  
+  
+  Object.assign(exports, {
+    getTemplatesByCustomer
+  });

@@ -2,8 +2,10 @@
 // Protected endpoint for Twilio Conversations webhooks. Used to populate the user's information from the CRM when a new unidentified message comes in.
 
 const hubspot = require('@hubspot/api-client')
-const {parseCustomer} = require(Runtime.getFunctions().fn.path);
 const axios = require('axios');
+
+const customersPath = Runtime.getAssets()['/providers/customers.js'].path
+const {parseCustomer} = require(customersPath);
 
 /**
  * Class Method to handle callbacks.

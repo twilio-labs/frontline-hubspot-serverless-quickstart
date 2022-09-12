@@ -2,7 +2,6 @@
 // Private endpoint for shared functions (e.g. getting CRM data)
 const axios = require('axios');
 const {phone} = require('phone');
-const {quickReplies} = require(Runtime.getFunctions().templates.path);
 
 /**
  * Function to check if token provided by Twilio Frontline is legitmate
@@ -135,6 +134,7 @@ const fetchCustomers = async (hubspotClient, pageSize, anchor)=>{
       }
         
 }
+
 /**
  * Function to retrieve Twilio Frontline Customer object from the contactId
  * @param {Object} hubspotClient - The initialized hubspot CRM nodejs SDK client
@@ -208,7 +208,7 @@ const getTemplatesByCustomerId = async (hubspotClient, {CustomerId,Worker,Conver
   
   let customerName = customerDetails.properties.firstname;
     
-    let template = JSON.parse(JSON.stringify(quickReplies));
+    let template = JSON.parse(JSON.stringify(quickRepliesTemplates));
     
     for(let cat of template){
       for(let tmp of cat.templates){
@@ -222,6 +222,7 @@ const getTemplatesByCustomerId = async (hubspotClient, {CustomerId,Worker,Conver
   
   
 }
+
 /**
  * Function to replace template placeholders with worker name, email, and customer name.
  * @param {String} template - Raw template with placeholders
@@ -238,7 +239,61 @@ const compileTemplate = (template, customerName, worker, email) => {
     return compiledTemplate;
 };
 
-
+const quickRepliesTemplates =[
+  {
+    display_name: 'Openers',
+    templates:[
+      {
+        raw:'Hi {{Name}}, {{Author}} here. Thanks for reaching out.'
+      },
+      {
+        raw:'Hi, How may I help?. ~ {{Author}}'
+      }
+    ]
+  },
+  {
+    display_name: 'Replies',
+    templates:[
+      {
+        raw:'You can drop us an email via contact@example.com and cc me at {{Email}}'
+      },
+      {
+        raw:'You can setup a meeting at a time of your choosing via https://example.com/meeting-link'
+      }
+     
+    ]
+  },
+  {
+    display_name: 'Closing',
+    templates:[
+      {
+        raw :'Happy to help, {{Name}}. If you have a moment could you leave a review about our interaction at this link: https://example.com. ~ {{Author}}.'
+      }
+    ]
+  },
+  //Grouped all Whatsapp approved starter conversations here. Note the WhatsAppApproved Booleab attribute.
+  {
+    display_name: 'WhatsApp Starters',
+    templates:[
+      {
+        raw:'Hi {{Name}}, We have an update for you! Reply to continue the conversation.',
+        whatsAppApproved: true
+      },
+      {
+        raw:'Hi {{Name}}, {{Author}} here.  I\'d like to check something with you. Is now a good time? Do drop me a reply.',
+        whatsAppApproved: true
+      },
+      {
+        raw:'Hi {{Name}}, {{Author}} from Org here.  I\'d like to check something with you. Is now a good time? Do drop me a reply.',
+        whatsAppApproved: true
+      },
+      {
+        raw:'Hi {{Name}}, {{Author}} from Org here.  I\'d like to follow up on the message you sent to us earlier. Is now a good time? Do drop me a reply.',
+        whatsAppApproved: true
+      }
+    ]
+  }
+]
 
 
 Object.assign(exports, {
