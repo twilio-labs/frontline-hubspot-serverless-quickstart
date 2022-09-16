@@ -124,6 +124,44 @@ const fetchCustomerById = async (hubspotClient, contactId)=>{
 
 }
 
+/**
+ * Function to find first matching Hubspot customer record based on phone number
+ * @param {Object} hubspotClient - The initialized hubspot CRM nodejs SDK client
+ * @param {Object} twilioClient  - The initialized twilio SDK client
+ * @param {String} phone - Phone number to attempt to match against existing Customer records
+ * @returns {Object} Twilio Frontline Customer Object.
+ */
+const findCustomerByPhone = async (hubspotClient, twilioClient, phone)=>{
+  const {nationalFormat} = (await twilioClient.lookups.v1.phoneNumbers(phone).fetch())
+  const cleannumber = nationalFormat.replace(/[^\d]/g,'');
+  const searchOptions = {
+    filterGroups: [
+      {
+        "filters":[
+          {"value":phone,"propertyName":"phone","operator":"EQ"},
+        ]
+      },{
+        "filters": [
+          {"value":nationalFormat,"propertyName":"phone","operator":"EQ"}
+        ]
+      },{
+        "filters":[
+          {"value":cleannumber,"propertyName":"phone","operator":"EQ"}
+        ]
+      }
+    ],
+    sorts: ["id"],
+    properties: ['company','email','phone','firstname','lastname'],
+    limit: 1, //ensures no more than 1 match returned
+    after: 0
+  };
+
+  const apiResponse = await hubspotClient.crm.contacts.searchApi.doSearch(searchOptions);
+  let customerMatch = apiResponse.body.results[0];
+  if (customerMatch) return parseCustomer(customerMatch);
+  return null;
+}
+
 Object.assign(exports, {
-  normalize,parseCustomer,fetchCustomers,fetchCustomerById
+  normalize,parseCustomer,fetchCustomers,fetchCustomerById, findCustomerByPhone
 });
