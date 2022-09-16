@@ -1,0 +1,22 @@
+{
+  "name": "frontline-hubspot",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "twilio-run",
+    "deploy": "twilio-run deploy"
+  },
+  "dependencies": {
+    "@hubspot/api-client": "^4.1.0",
+    "@twilio/runtime-handler": "1.1.3",
+    "axios": "^0.21.1",
+    "phone": "^3.1.4",
+    "twilio": "^3.56"
+  },
+  "devDependencies": {
+    "twilio-run": "^3.2.2"
+  },
+  "engines": {
+    "node": "12"
+  }
+}
