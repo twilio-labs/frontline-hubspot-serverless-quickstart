@@ -12,7 +12,7 @@ We recommend following the setup outlined Frontline node.js quickstart, which sh
 
 * A Twilio Account. Don't have one? [Sign up](https://www.twilio.com/try-twilio) for free!
 * An SMS enabled [phone number](https://www.twilio.com/docs/frontline/nodejs-demo-quickstart#sign-up-for-a-twilio-account-and-get-a-phone-number).
-* A [Twilio Frontline instance](https://www.twilio.com/docs/frontline/nodejs-demo-quickstart#create-a-new-twilio-frontline-instance).
+* A [Twilio Frontline instance](https://www.twilio.com/docs/frontline/nodejs-demo-quickstart#create-a-new-twilio-frontline-instance) connected to an Identity Provider for user authentication.
 * Twilio Conversations [configured](https://www.twilio.com/docs/frontline/nodejs-demo-quickstart#configure-twilio-conversations) to use the Frontline Conversations service as it's default conversation service.
 * A Free [Hubspot Account](https://www.hubspot.com)
 
@@ -59,10 +59,9 @@ If your deploy is successful, you should see an output that looks like this:
 
 <img src="readmefiles/D1.png">
 
-The app provides five callback URLs:
+The app provides generates the following callback URLs:
 * `/callbacks/crm`: called when Frontline loads the contact list or a user detail page.
 * `/callbacks/outgoing-conversation`: called when a user initiates an outbound conversation.
-* `/callbacks/routing`: called when a messages is sent inbound that does not match an open conversation.
 * `/callbacks/templates`: called when a user opens the templates menu.
 * `/callbacks/twilio-conversations`: called after a conversation is created or a participant is added to the conversation.
 
@@ -71,8 +70,7 @@ The app provides five callback URLs:
 Copy and paste the callback URLs (uncluding your unique subdomain) into your Frontline configuration in the console.
 
 ### Routing configuration
-In the Twilio Console, go to ***Frontline > Manage > Routing*** and add `[your_app_url]/callbacks/routing` under Custom routing:
-<img width="1278" alt="Screen Shot 2022-02-28 at 11 43 02 PM" src="https://user-images.githubusercontent.com/1418949/156145008-bdffde5e-3c71-465e-b660-a9312f6167cc.png">
+In the Twilio Console, go to ***Frontline > Manage > Routing*** and make sure 'Pool routing' is selected.
 
 ### Frontline callbacks
 In the Twilio Console, go to ***Frontline > Manage > Callbacks*** and copy / paste the following callback URLs from your Frontline integration service:
