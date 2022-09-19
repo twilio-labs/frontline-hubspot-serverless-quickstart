@@ -1,9 +1,5 @@
 
 // Protected endpoint for Twilio Conversations webhooks. Used to populate the user's information from the CRM when a new unidentified message comes in.
-
-const axios = require('axios');
-
-const {getHubspotClient} = require(Runtime.getAssets()['/providers/hubspot.js'].path);
 const {findCustomerByPhone} = require(Runtime.getAssets()['/providers/customers.js'].path);
 
 /**
@@ -12,7 +8,6 @@ const {findCustomerByPhone} = require(Runtime.getAssets()['/providers/customers.
 class callback_actions{
   constructor(context, event, callback){
     Object.assign(this,{context, event, callback});
-    this.hubspotClient = getHubspotClient(context.HUBSPOT_API_KEY);
   }
 
   async onConversationAdded(){
@@ -41,7 +36,7 @@ class callback_actions{
         phone = phone.substring(9)
       }
 
-      const customerMatch = await findCustomerByPhone(this.hubspotClient, twilioClient, phone)
+      const customerMatch = await findCustomerByPhone(this.context, twilioClient, phone)
       if(customerMatch){
         let {customer_id, display_name} = customerMatch;
         let attributes = JSON.stringify({customer_id, display_name});

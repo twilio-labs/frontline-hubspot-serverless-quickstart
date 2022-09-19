@@ -1,15 +1,9 @@
 // Public endpoint for Twilio Frontline's CRM Callback URL
-
-const hubspotPath = Runtime.getAssets()['/providers/hubspot.js'].path
-const {getHubspotClient} = require(hubspotPath);
-
 const customersPath = Runtime.getAssets()['/providers/customers.js'].path
 const {fetchCustomerById,fetchCustomers} = require(customersPath);
 
 
 exports.handler = async function(context, event, callback) {
-  const {HUBSPOT_API_KEY} = context;
-  const hubspotClient = getHubspotClient(HUBSPOT_API_KEY);
   const rsp = new Twilio.Response();
   rsp.setHeaders({
     "Content-Type":"application/json"
@@ -17,7 +11,7 @@ exports.handler = async function(context, event, callback) {
 
   switch(event.location || event.Location){
     case 'GetCustomerDetailsByCustomerId':
-      let customer = await fetchCustomerById(hubspotClient, event.CustomerId);
+      let customer = await fetchCustomerById(context, event.CustomerId);
       rsp.setBody({
         objects: {
             customer
@@ -26,7 +20,7 @@ exports.handler = async function(context, event, callback) {
       break;
 
     case 'GetCustomersList':
-      let customers = await fetchCustomers(hubspotClient, event.PageSize, event.Anchor);
+      let customers = await fetchCustomers(context, event.PageSize, event.Anchor);
       rsp.setBody({
         objects: {
             customers
